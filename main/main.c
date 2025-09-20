@@ -1,4 +1,4 @@
-#include "visual.h"
+#include "../visual/visual.h"
 
 int main() {
     if (!init_SDL()) return 1;
