@@ -1,4 +1,6 @@
 #include "../visual/visual.h"
+#include <SDL2/SDL.h>
+#include "../visual/visual.h"
 
 int main() {
     if (!init_SDL()) return 1;
