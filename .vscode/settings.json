@@ -1,3 +1,9 @@
 {
+<<<<<<< HEAD
     "commentTranslate.hover.enabled": true
+=======
+    "files.associations": {
+        "visual.h": "c"
+    }
+>>>>>>> f4398df697034344d1d75b61ec1ae8d157eb48f4
 }
