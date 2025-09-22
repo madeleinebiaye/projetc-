@@ -7,33 +7,50 @@ SDL_Renderer* renderer = NULL;
 
 int init_SDL() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        printf("Erreur SDL: %s\n", SDL_GetError());
+        printf("SDL Error: %s\n", SDL_GetError());
         return 0;
     }
-    window = SDL_CreateWindow("Visualisation Tri", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 640, 480, 0);
+    // Window size as per project example: 800x600
+    window = SDL_CreateWindow("Sorting Visualization", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, 0);
     if (!window) {
-        printf("Erreur creation window: %s\n", SDL_GetError());
+        printf("Window creation error: %s\n", SDL_GetError());
         return 0;
     }
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
-        printf("Erreur creation renderer: %s\n", SDL_GetError());
+        printf("Renderer creation error: %s\n", SDL_GetError());
         return 0;
     }
     return 1;
 }
 
-void afficher_tableau(int* tab, int taille) {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // fond noir
+void afficher_tableau(int* tab, int taille, int highlight1, int highlight2) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Black background
     SDL_RenderClear(renderer);
 
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255); // colonnes rouges
+    // Find max value to scale heights
+    int max_val = 1; // Avoid division by zero
+    for (int i = 0; i < taille; i++) {
+        if (tab[i] > max_val) max_val = tab[i];
+    }
 
-    int largeur_col = 50;
-    int espace = 10;
+    // Dynamic bar width and spacing
+    int bar_width = (800 - 20) / taille; // Total width 800, margin 10 each side
+    if (bar_width < 1) bar_width = 1; // Minimum width
+    int spacing = 1; // Small spacing
 
     for (int i = 0; i < taille; i++) {
-        SDL_Rect rect = { i * (largeur_col + espace) + 50, 480 - tab[i]*50, largeur_col, tab[i]*50 };
+        // Default color: red
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        
+        // Highlight color: green if index matches highlight1 or highlight2
+        if (i == highlight1 || i == highlight2) {
+            SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255); // Green for highlights
+        }
+        
+        // Bar rect: x = margin + i*(width+space), y = bottom - height, width, height scaled to 550 max (margin top/bottom)
+        int bar_height = (tab[i] * 550) / max_val;
+        SDL_Rect rect = { 10 + i * (bar_width + spacing), 600 - bar_height - 10, bar_width, bar_height };
         SDL_RenderFillRect(renderer, &rect);
     }
 
