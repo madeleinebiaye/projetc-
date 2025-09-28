@@ -1,253 +1,282 @@
 #include "sorting.h"
 #include <SDL2/SDL.h>
 
-extern int should_stop_sorting;  // Declare global variable from main.c
-
 // Implements Bubble Sort with step-by-step visualization
-// Principle: Repeatedly swaps adjacent elements if they are in wrong order.
-// Passes through the array until no more swaps are needed.
-void bubble_sort(int arr[], int n) {
+void bubble_sort(int arr[], int n, SortStats* stats) {
     int i, j, temp;
     int swapped;
     
+    start_timer(stats);  // Start timing
     for (i = 0; i < n - 1; i++) {
         swapped = 0;
-        
         for (j = 0; j < n - i - 1; j++) {
-            process_events_during_sorting();  // Check events
-            if (should_stop_sorting) return;  // Stop if requested
+            process_events_during_sorting();
+            if (should_stop_sorting) {
+                stop_timer(stats);
+                return;
+            }
             afficher_tableau(arr, n, j, j + 1);
-            SDL_Delay(100);  // Delay to make the animation visible
+            SDL_Delay(100);
             
+            increment_comparisons(stats);  // Count comparison
+            increment_memory_accesses(stats, 2);  // Read arr[j], arr[j+1]
             if (arr[j] > arr[j + 1]) {
-                // Swap arr[j] and arr[j+1]
                 temp = arr[j];
                 arr[j] = arr[j + 1];
                 arr[j + 1] = temp;
                 swapped = 1;
+                increment_memory_accesses(stats, 3);  // Read temp, write arr[j], arr[j+1]
                 
-                // Visualize after swap
                 afficher_tableau(arr, n, j, j + 1);
                 SDL_Delay(100);
-                process_events_during_sorting();  // Check after swap
-                if (should_stop_sorting) return;
+                process_events_during_sorting();
+                if (should_stop_sorting) {
+                    stop_timer(stats);
+                    return;
+                }
             }
         }
-        
-        // If no swaps in this pass, array is sorted
         if (swapped == 0) break;
     }
-    
-    // Final display of the sorted array
+    stop_timer(stats);  // Stop timing
     afficher_tableau(arr, n, -1, -1);
 }
 
-// Implements Selection Sort with step-by-step visualization
-// Principle: Finds the minimum element in the unsorted part and swaps it with the first unsorted element.
-void selection_sort(int arr[], int n) {
+void selection_sort(int arr[], int n, SortStats* stats) {
     int i, j, min_index, temp;
     
+    start_timer(stats);
     for (i = 0; i < n - 1; i++) {
-        min_index = i;  // Assume the minimum is at position i
-        
+        min_index = i;
         for (j = i + 1; j < n; j++) {
             process_events_during_sorting();
-            if (should_stop_sorting) return;
+            if (should_stop_sorting) {
+                stop_timer(stats);
+                return;
+            }
             afficher_tableau(arr, n, min_index, j);
-            SDL_Delay(100);  // Delay to make the animation visible
+            SDL_Delay(100);
             
+            increment_comparisons(stats);
+            increment_memory_accesses(stats, 2);  // Read arr[j], arr[min_index]
             if (arr[j] < arr[min_index]) {
-                min_index = j;  // Update min_index if a smaller element is found
+                min_index = j;
             }
         }
-        
-        // If min_index changed, swap arr[i] and arr[min_index]
         if (min_index != i) {
             temp = arr[i];
             arr[i] = arr[min_index];
             arr[min_index] = temp;
+            increment_memory_accesses(stats, 3);  // Read temp, write arr[i], arr[min_index]
             
-            // Visualize the swap
             afficher_tableau(arr, n, i, min_index);
-            SDL_Delay(100);  // Delay after swap
+            SDL_Delay(100);
             process_events_during_sorting();
-            if (should_stop_sorting) return;
+            if (should_stop_sorting) {
+                stop_timer(stats);
+                return;
+            }
         }
     }
-    
-    // Final display of the sorted array
+    stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
 }
 
-// Implements Insertion Sort with step-by-step visualization
-// Principle: Builds a sorted subarray by inserting each new element into its correct position.
-void insertion_sort(int arr[], int n) {
+void insertion_sort(int arr[], int n, SortStats* stats) {
     int i, j, key;
     
+    start_timer(stats);
     for (i = 1; i < n; i++) {
-        key = arr[i];  // Element to insert
+        key = arr[i];
+        increment_memory_accesses(stats, 1);  // Read arr[i]
         j = i - 1;
         
-        // Move elements of arr[0..i-1] that are greater than key
         while (j >= 0 && arr[j] > key) {
             process_events_during_sorting();
-            if (should_stop_sorting) return;
+            if (should_stop_sorting) {
+                stop_timer(stats);
+                return;
+            }
+            increment_comparisons(stats);
+            increment_memory_accesses(stats, 1);  // Read arr[j]
             afficher_tableau(arr, n, j, i);
-            SDL_Delay(100);  // Delay for animation
+            SDL_Delay(100);
             
-            arr[j + 1] = arr[j];  // Shift element
+            arr[j + 1] = arr[j];
+            increment_memory_accesses(stats, 2);  // Read arr[j], write arr[j+1]
             j--;
         }
         
-        arr[j + 1] = key;  // Insert key
-        
-        // Visualize after insertion
+        arr[j + 1] = key;
+        increment_memory_accesses(stats, 1);  // Write arr[j+1]
         afficher_tableau(arr, n, j + 1, -1);
         SDL_Delay(100);
         process_events_during_sorting();
-        if (should_stop_sorting) return;
+        if (should_stop_sorting) {
+            stop_timer(stats);
+            return;
+        }
     }
-    
-    // Final display
+    stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
 }
 
-// Helper function for QuickSort partition with visualization
-// Principle: Chooses a pivot and partitions the array around it.
-int partition(int arr[], int low, int high, int n) {
-    int pivot = arr[high];  // Choose last element as pivot
-    int i = low - 1;  // Index of smaller element
+int partition(int arr[], int low, int high, int n, SortStats* stats) {
+    int pivot = arr[high];
+    increment_memory_accesses(stats, 1);  // Read arr[high]
+    int i = low - 1;
     int j, temp;
     
     for (j = low; j < high; j++) {
         process_events_during_sorting();
-        if (should_stop_sorting) return -1;  // Return invalid index to signal stop
+        if (should_stop_sorting) {
+            stop_timer(stats);
+            return -1;
+        }
         afficher_tableau(arr, n, j, high);
         SDL_Delay(100);
         
+        increment_comparisons(stats);
+        increment_memory_accesses(stats, 1);  // Read arr[j]
         if (arr[j] < pivot) {
             i++;
-            // Swap arr[i] and arr[j]
             temp = arr[i];
             arr[i] = arr[j];
             arr[j] = temp;
+            increment_memory_accesses(stats, 3);  // Read temp, write arr[i], arr[j]
             
-            // Visualize swap
             afficher_tableau(arr, n, i, j);
             SDL_Delay(100);
             process_events_during_sorting();
-            if (should_stop_sorting) return -1;
+            if (should_stop_sorting) {
+                stop_timer(stats);
+                return -1;
+            }
         }
     }
     
-    // Swap arr[i+1] and arr[high] (pivot)
     temp = arr[i + 1];
     arr[i + 1] = arr[high];
     arr[high] = temp;
+    increment_memory_accesses(stats, 3);  // Read temp, write arr[i+1], arr[high]
     
-    // Visualize final pivot swap
     afficher_tableau(arr, n, i + 1, high);
     SDL_Delay(100);
     process_events_during_sorting();
-    if (should_stop_sorting) return -1;
+    if (should_stop_sorting) {
+        stop_timer(stats);
+        return -1;
+    }
     
-    return i + 1;  // Return partition index
+    return i + 1;
 }
 
-// Recursive QuickSort function
-// Principle: Divide-and-conquer: partition and recurse on subarrays.
-void quicksort(int arr[], int low, int high, int n) {
+void quicksort(int arr[], int low, int high, int n, SortStats* stats) {
     if (low < high) {
-        int pi = partition(arr, low, high, n);
-        if (pi == -1) return;  // Stop if interrupted
-        quicksort(arr, low, pi - 1, n);  // Left subarray
-        quicksort(arr, pi + 1, high, n);  // Right subarray
+        int pi = partition(arr, low, high, n, stats);
+        if (pi == -1) return;
+        quicksort(arr, low, pi - 1, n, stats);
+        quicksort(arr, pi + 1, high, n, stats);
     }
 }
 
-// Main QuickSort function
-void quick_sort(int arr[], int n) {
-    quicksort(arr, 0, n - 1, n);
-    
-    // Final display
+void quick_sort(int arr[], int n, SortStats* stats) {
+    start_timer(stats);
+    quicksort(arr, 0, n - 1, n, stats);
+    stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
 }
 
-// Helper function to merge two halves with visualization
-// Principle: Merges two sorted subarrays into one.
-void merge(int arr[], int low, int mid, int high, int n) {
+void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
     int n1 = mid - low + 1;
     int n2 = high - mid;
-    int L[n1], R[n2];  // Temporary arrays
+    int L[n1], R[n2];
     int i, j, k;
     
-    // Copy data to temporary arrays
-    for (i = 0; i < n1; i++) L[i] = arr[low + i];
-    for (j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];
+    for (i = 0; i < n1; i++) {
+        L[i] = arr[low + i];
+        increment_memory_accesses(stats, 2);  // Read arr[low+i], write L[i]
+    }
+    for (j = 0; j < n2; j++) {
+        R[j] = arr[mid + 1 + j];
+        increment_memory_accesses(stats, 2);  // Read arr[mid+1+j], write R[j]
+    }
     
     i = 0; j = 0; k = low;
     
     while (i < n1 && j < n2) {
         process_events_during_sorting();
-        if (should_stop_sorting) return;
+        if (should_stop_sorting) {
+            stop_timer(stats);
+            return;
+        }
         afficher_tableau(arr, n, low + i, mid + 1 + j);
         SDL_Delay(100);
         
+        increment_comparisons(stats);
+        increment_memory_accesses(stats, 2);  // Read L[i], R[j]
         if (L[i] <= R[j]) {
             arr[k] = L[i];
+            increment_memory_accesses(stats, 2);  // Read L[i], write arr[k]
             i++;
         } else {
             arr[k] = R[j];
+            increment_memory_accesses(stats, 2);  // Read R[j], write arr[k]
             j++;
         }
         k++;
         
-        // Visualize after copy
         afficher_tableau(arr, n, k - 1, -1);
         SDL_Delay(100);
         process_events_during_sorting();
-        if (should_stop_sorting) return;
+        if (should_stop_sorting) {
+            stop_timer(stats);
+            return;
+        }
     }
     
-    // Copy remaining elements from L
     while (i < n1) {
         arr[k] = L[i];
+        increment_memory_accesses(stats, 2);  // Read L[i], write arr[k]
         i++; k++;
         afficher_tableau(arr, n, k - 1, -1);
         SDL_Delay(100);
         process_events_during_sorting();
-        if (should_stop_sorting) return;
+        if (should_stop_sorting) {
+            stop_timer(stats);
+            return;
+        }
     }
     
-    // Copy remaining elements from R
     while (j < n2) {
         arr[k] = R[j];
+        increment_memory_accesses(stats, 2);  // Read R[j], write arr[k]
         j++; k++;
         afficher_tableau(arr, n, k - 1, -1);
         SDL_Delay(100);
         process_events_during_sorting();
-        if (should_stop_sorting) return;
+        if (should_stop_sorting) {
+            stop_timer(stats);
+            return;
+        }
     }
 }
 
-// Recursive MergeSort function
-// Principle: Divide-and-conquer: split, sort recursively, then merge.
-void mergesort(int arr[], int low, int high, int n) {
+void mergesort(int arr[], int low, int high, int n, SortStats* stats) {
     if (low < high) {
         int mid = low + (high - low) / 2;
         
-        mergesort(arr, low, mid, n);
-        if (should_stop_sorting) return;  // Check after recursive call
-        mergesort(arr, mid + 1, high, n);
-        if (should_stop_sorting) return;  // Check after recursive call
-        merge(arr, low, mid, high, n);
+        mergesort(arr, low, mid, n, stats);
+        if (should_stop_sorting) return;
+        mergesort(arr, mid + 1, high, n, stats);
+        if (should_stop_sorting) return;
+        merge(arr, low, mid, high, n, stats);
     }
 }
 
-// Main MergeSort function
-void merge_sort(int arr[], int n) {
-    mergesort(arr, 0, n - 1, n);
-    
-    // Final display
+void merge_sort(int arr[], int n, SortStats* stats) {
+    start_timer(stats);
+    mergesort(arr, 0, n - 1, n, stats);
+    stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
 }
