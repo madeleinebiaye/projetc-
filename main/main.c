@@ -4,7 +4,6 @@
 #include <stdlib.h>  // For rand()
 #include <time.h>    // For srand()
 #include <stdio.h>   // For printf
-
 #define N 100  // Array size as per project example
 
 // Global variables for sorting state

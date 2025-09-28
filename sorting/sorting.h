@@ -15,5 +15,6 @@ int partition(int arr[], int low, int high, int n);
 void quicksort(int arr[], int low, int high, int n);
 void merge(int arr[], int low, int mid, int high, int n);
 void mergesort(int arr[], int low, int high, int n);
+void process_events_during_sorting(void);  // Declare event processing function
 
 #endif // SORTING_H

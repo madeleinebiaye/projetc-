@@ -1,5 +1,7 @@
-#include "sorting.h"  // Include the header
-#include <SDL2/SDL.h>  // For SDL_Delay
+#include "sorting.h"
+#include <SDL2/SDL.h>
+
+extern int should_stop_sorting;  // Declare global variable from main.c
 
 // Implements Bubble Sort with step-by-step visualization
 // Principle: Repeatedly swaps adjacent elements if they are in wrong order.
@@ -12,7 +14,8 @@ void bubble_sort(int arr[], int n) {
         swapped = 0;
         
         for (j = 0; j < n - i - 1; j++) {
-            // Visualize the comparison between j and j+1
+            process_events_during_sorting();  // Check events
+            if (should_stop_sorting) return;  // Stop if requested
             afficher_tableau(arr, n, j, j + 1);
             SDL_Delay(100);  // Delay to make the animation visible
             
@@ -26,6 +29,8 @@ void bubble_sort(int arr[], int n) {
                 // Visualize after swap
                 afficher_tableau(arr, n, j, j + 1);
                 SDL_Delay(100);
+                process_events_during_sorting();  // Check after swap
+                if (should_stop_sorting) return;
             }
         }
         
@@ -46,7 +51,8 @@ void selection_sort(int arr[], int n) {
         min_index = i;  // Assume the minimum is at position i
         
         for (j = i + 1; j < n; j++) {
-            // Visualize the comparison between min_index and j
+            process_events_during_sorting();
+            if (should_stop_sorting) return;
             afficher_tableau(arr, n, min_index, j);
             SDL_Delay(100);  // Delay to make the animation visible
             
@@ -64,6 +70,8 @@ void selection_sort(int arr[], int n) {
             // Visualize the swap
             afficher_tableau(arr, n, i, min_index);
             SDL_Delay(100);  // Delay after swap
+            process_events_during_sorting();
+            if (should_stop_sorting) return;
         }
     }
     
@@ -82,7 +90,8 @@ void insertion_sort(int arr[], int n) {
         
         // Move elements of arr[0..i-1] that are greater than key
         while (j >= 0 && arr[j] > key) {
-            // Visualize the comparison between j and the key's original position
+            process_events_during_sorting();
+            if (should_stop_sorting) return;
             afficher_tableau(arr, n, j, i);
             SDL_Delay(100);  // Delay for animation
             
@@ -95,6 +104,8 @@ void insertion_sort(int arr[], int n) {
         // Visualize after insertion
         afficher_tableau(arr, n, j + 1, -1);
         SDL_Delay(100);
+        process_events_during_sorting();
+        if (should_stop_sorting) return;
     }
     
     // Final display
@@ -109,7 +120,8 @@ int partition(int arr[], int low, int high, int n) {
     int j, temp;
     
     for (j = low; j < high; j++) {
-        // Visualize comparison between j and high (pivot)
+        process_events_during_sorting();
+        if (should_stop_sorting) return -1;  // Return invalid index to signal stop
         afficher_tableau(arr, n, j, high);
         SDL_Delay(100);
         
@@ -123,6 +135,8 @@ int partition(int arr[], int low, int high, int n) {
             // Visualize swap
             afficher_tableau(arr, n, i, j);
             SDL_Delay(100);
+            process_events_during_sorting();
+            if (should_stop_sorting) return -1;
         }
     }
     
@@ -134,6 +148,8 @@ int partition(int arr[], int low, int high, int n) {
     // Visualize final pivot swap
     afficher_tableau(arr, n, i + 1, high);
     SDL_Delay(100);
+    process_events_during_sorting();
+    if (should_stop_sorting) return -1;
     
     return i + 1;  // Return partition index
 }
@@ -143,7 +159,7 @@ int partition(int arr[], int low, int high, int n) {
 void quicksort(int arr[], int low, int high, int n) {
     if (low < high) {
         int pi = partition(arr, low, high, n);
-        
+        if (pi == -1) return;  // Stop if interrupted
         quicksort(arr, low, pi - 1, n);  // Left subarray
         quicksort(arr, pi + 1, high, n);  // Right subarray
     }
@@ -172,7 +188,8 @@ void merge(int arr[], int low, int mid, int high, int n) {
     i = 0; j = 0; k = low;
     
     while (i < n1 && j < n2) {
-        // Visualize comparison (highlight approximate positions in original array)
+        process_events_during_sorting();
+        if (should_stop_sorting) return;
         afficher_tableau(arr, n, low + i, mid + 1 + j);
         SDL_Delay(100);
         
@@ -188,6 +205,8 @@ void merge(int arr[], int low, int mid, int high, int n) {
         // Visualize after copy
         afficher_tableau(arr, n, k - 1, -1);
         SDL_Delay(100);
+        process_events_during_sorting();
+        if (should_stop_sorting) return;
     }
     
     // Copy remaining elements from L
@@ -196,6 +215,8 @@ void merge(int arr[], int low, int mid, int high, int n) {
         i++; k++;
         afficher_tableau(arr, n, k - 1, -1);
         SDL_Delay(100);
+        process_events_during_sorting();
+        if (should_stop_sorting) return;
     }
     
     // Copy remaining elements from R
@@ -204,6 +225,8 @@ void merge(int arr[], int low, int mid, int high, int n) {
         j++; k++;
         afficher_tableau(arr, n, k - 1, -1);
         SDL_Delay(100);
+        process_events_during_sorting();
+        if (should_stop_sorting) return;
     }
 }
 
@@ -214,8 +237,9 @@ void mergesort(int arr[], int low, int high, int n) {
         int mid = low + (high - low) / 2;
         
         mergesort(arr, low, mid, n);
+        if (should_stop_sorting) return;  // Check after recursive call
         mergesort(arr, mid + 1, high, n);
-        
+        if (should_stop_sorting) return;  // Check after recursive call
         merge(arr, low, mid, high, n);
     }
 }
