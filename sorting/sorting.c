@@ -1,6 +1,8 @@
 #include "sorting.h"
 #include <SDL2/SDL.h>
 
+extern SDL_Renderer* renderer; // Access renderer from visual.c
+
 // Implements Bubble Sort with step-by-step visualization
 void bubble_sort(int arr[], int n, SortStats* stats) {
     int i, j, temp;
@@ -16,6 +18,8 @@ void bubble_sort(int arr[], int n, SortStats* stats) {
                 return;
             }
             afficher_tableau(arr, n, j, j + 1);
+            afficher_stats(stats, "Bubble Sort"); // Add stats display
+            SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             
             increment_comparisons(stats);  // Count comparison
@@ -28,6 +32,8 @@ void bubble_sort(int arr[], int n, SortStats* stats) {
                 increment_memory_accesses(stats, 3);  // Read temp, write arr[j], arr[j+1]
                 
                 afficher_tableau(arr, n, j, j + 1);
+                afficher_stats(stats, "Bubble Sort"); // Add stats display
+                SDL_RenderPresent(renderer); // Update display
                 SDL_Delay(100);
                 process_events_during_sorting();
                 if (should_stop_sorting) {
@@ -40,6 +46,8 @@ void bubble_sort(int arr[], int n, SortStats* stats) {
     }
     stop_timer(stats);  // Stop timing
     afficher_tableau(arr, n, -1, -1);
+    afficher_stats(stats, "Bubble Sort"); // Final stats display
+    SDL_RenderPresent(renderer); // Update display
 }
 
 void selection_sort(int arr[], int n, SortStats* stats) {
@@ -55,6 +63,8 @@ void selection_sort(int arr[], int n, SortStats* stats) {
                 return;
             }
             afficher_tableau(arr, n, min_index, j);
+            afficher_stats(stats, "Selection Sort"); // Add stats display
+            SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             
             increment_comparisons(stats);
@@ -70,6 +80,8 @@ void selection_sort(int arr[], int n, SortStats* stats) {
             increment_memory_accesses(stats, 3);  // Read temp, write arr[i], arr[min_index]
             
             afficher_tableau(arr, n, i, min_index);
+            afficher_stats(stats, "Selection Sort"); // Add stats display
+            SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             process_events_during_sorting();
             if (should_stop_sorting) {
@@ -80,6 +92,8 @@ void selection_sort(int arr[], int n, SortStats* stats) {
     }
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
+    afficher_stats(stats, "Selection Sort"); // Final stats display
+    SDL_RenderPresent(renderer); // Update display
 }
 
 void insertion_sort(int arr[], int n, SortStats* stats) {
@@ -100,6 +114,8 @@ void insertion_sort(int arr[], int n, SortStats* stats) {
             increment_comparisons(stats);
             increment_memory_accesses(stats, 1);  // Read arr[j]
             afficher_tableau(arr, n, j, i);
+            afficher_stats(stats, "Insertion Sort"); // Add stats display
+            SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             
             arr[j + 1] = arr[j];
@@ -110,6 +126,8 @@ void insertion_sort(int arr[], int n, SortStats* stats) {
         arr[j + 1] = key;
         increment_memory_accesses(stats, 1);  // Write arr[j+1]
         afficher_tableau(arr, n, j + 1, -1);
+        afficher_stats(stats, "Insertion Sort"); // Add stats display
+        SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
         if (should_stop_sorting) {
@@ -119,6 +137,8 @@ void insertion_sort(int arr[], int n, SortStats* stats) {
     }
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
+    afficher_stats(stats, "Insertion Sort"); // Final stats display
+    SDL_RenderPresent(renderer); // Update display
 }
 
 int partition(int arr[], int low, int high, int n, SortStats* stats) {
@@ -134,6 +154,8 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
             return -1;
         }
         afficher_tableau(arr, n, j, high);
+        afficher_stats(stats, "Quick Sort"); // Add stats display
+        SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         
         increment_comparisons(stats);
@@ -146,6 +168,8 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
             increment_memory_accesses(stats, 3);  // Read temp, write arr[i], arr[j]
             
             afficher_tableau(arr, n, i, j);
+            afficher_stats(stats, "Quick Sort"); // Add stats display
+            SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             process_events_during_sorting();
             if (should_stop_sorting) {
@@ -161,6 +185,8 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
     increment_memory_accesses(stats, 3);  // Read temp, write arr[i+1], arr[high]
     
     afficher_tableau(arr, n, i + 1, high);
+    afficher_stats(stats, "Quick Sort"); // Add stats display
+    SDL_RenderPresent(renderer); // Update display
     SDL_Delay(100);
     process_events_during_sorting();
     if (should_stop_sorting) {
@@ -185,6 +211,8 @@ void quick_sort(int arr[], int n, SortStats* stats) {
     quicksort(arr, 0, n - 1, n, stats);
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
+    afficher_stats(stats, "Quick Sort"); // Final stats display
+    SDL_RenderPresent(renderer); // Update display
 }
 
 void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
@@ -211,6 +239,8 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
             return;
         }
         afficher_tableau(arr, n, low + i, mid + 1 + j);
+        afficher_stats(stats, "Merge Sort"); // Add stats display
+        SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         
         increment_comparisons(stats);
@@ -227,6 +257,8 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         k++;
         
         afficher_tableau(arr, n, k - 1, -1);
+        afficher_stats(stats, "Merge Sort"); // Add stats display
+        SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
         if (should_stop_sorting) {
@@ -240,6 +272,8 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         increment_memory_accesses(stats, 2);  // Read L[i], write arr[k]
         i++; k++;
         afficher_tableau(arr, n, k - 1, -1);
+        afficher_stats(stats, "Merge Sort"); // Add stats display
+        SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
         if (should_stop_sorting) {
@@ -253,6 +287,8 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         increment_memory_accesses(stats, 2);  // Read R[j], write arr[k]
         j++; k++;
         afficher_tableau(arr, n, k - 1, -1);
+        afficher_stats(stats, "Merge Sort"); // Add stats display
+        SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
         if (should_stop_sorting) {
@@ -279,4 +315,6 @@ void merge_sort(int arr[], int n, SortStats* stats) {
     mergesort(arr, 0, n - 1, n, stats);
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
+    afficher_stats(stats, "Merge Sort"); // Final stats display
+    SDL_RenderPresent(renderer); // Update display
 }
