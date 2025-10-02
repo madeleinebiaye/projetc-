@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdio.h>
+#include <printf.h>
 
 #define N 100
 
@@ -44,7 +44,7 @@ int main() {
     SortStats stats;
     generate_random_array(tableau, N);
     afficher_tableau(tableau, N, -1, -1);
-    afficher_stats(&stats, "Idle");
+    afficher_stats(&stats, "Idle", 0); // Ajout de live_update = 0
     SDL_RenderPresent(renderer);
 
     SDL_Event e;
@@ -108,7 +108,7 @@ int main() {
                 // Display final array and stats
                 if (!should_stop_sorting && sort_name[0] != '\0') {
                     afficher_tableau(tableau, N, -1, -1);
-                    afficher_stats(&stats, sort_name);
+                    afficher_stats(&stats, sort_name, 0); // Ajout de live_update = 0
                     SDL_RenderPresent(renderer);
                     if (!should_stop_sorting) {
                         printf("%s completed: %d comparisons, %d memory accesses, %.3f seconds\n",
@@ -120,12 +120,13 @@ int main() {
         }
         // Update stats display during sorting or idle
         if (sorting_in_progress) {
-            afficher_stats(&stats, "Sorting...");
+            stats.end_time = SDL_GetTicks();  // Mise à jour en temps réel (corrigé avec .)
+            afficher_stats(&stats, "Sorting...", 1); // Ajout de live_update = 1
             SDL_RenderPresent(renderer);
             SDL_Delay(10);
         } else {
             afficher_tableau(tableau, N, -1, -1); // Redraw array
-            afficher_stats(&stats, "Idle");
+            afficher_stats(&stats, "Idle", 0); // Ajout de live_update = 0
             SDL_RenderPresent(renderer);
             SDL_Delay(16);
         }

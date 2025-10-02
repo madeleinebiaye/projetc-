@@ -56,13 +56,19 @@ void afficher_tableau(int* tab, int taille, int highlight1, int highlight2) {
     // Note: SDL_RenderPresent called by caller
 }
 
-void afficher_stats(SortStats* stats, const char* sort_name) {
+void afficher_stats(SortStats* stats, const char* sort_name, int live_update) {
     SDL_Color white = {255, 255, 255, 255};
     char text[256];
+    float time;
+    if (live_update) {
+        stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
+        time = (stats->end_time - stats->start_time) / 1000.0f;
+    } else {
+        time = get_execution_time(stats);  // Temps final
+    }
     snprintf(text, sizeof(text),
              "%s: %d comparisons, %d accesses, %.3f s",
-             sort_name, stats->comparisons, stats->memory_accesses,
-             get_execution_time(stats));
+             sort_name, stats->comparisons, stats->memory_accesses, time); // Corrigé avec ->
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, white);
     if (!surface) {
         printf("Text rendering failed: %s\n", TTF_GetError());
