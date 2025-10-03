@@ -8,6 +8,11 @@
 extern SDL_Renderer* renderer; // Add this
 int init_SDL();                    // Initializes SDL and creates window + renderer
 void afficher_tableau(int* tab, int taille, int highlight1, int highlight2); // Displays array as bars
+void afficher_tableau_generic(void* tab, int taille, size_t size, int highlight1, int highlight2, DistributionType dist, float (*extract_value)(const void*));
+float extract_int(const void* ptr);
+float extract_float(const void* ptr);
+float extract_student_grade(const void* ptr);
+float extract_student_age(const void* ptr);
 void afficher_stats(SortStats* stats, const char* sort_name , int live_update , DistributionType dist); // Display stats
 void fermer_SDL();                  // Cleans up SDL
 

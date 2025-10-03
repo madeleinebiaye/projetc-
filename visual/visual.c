@@ -36,6 +36,45 @@ int init_SDL() {
     return 1;
 }
 
+float extract_int(const void* ptr) {
+    return (float)(*(int*)ptr);
+}
+
+float extract_float(const void* ptr) {
+    return *(float*)ptr;
+}
+
+float extract_student_grade(const void* ptr) {
+    return ((Student*)ptr)->grade;
+}
+
+float extract_student_age(const void* ptr) {
+    return (float)((Student*)ptr)->age;
+}
+
+void afficher_tableau_generic(void* tab, int taille, size_t size, int highlight1, int highlight2, DistributionType dist, float (*extract_value)(const void*)) {
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    
+    float max_val = 1.0f;
+    for (int i = 0; i < taille; i++) {
+        float val = extract_value((char*)tab + i * size);
+        if (val > max_val) max_val = val;
+    }
+    
+    int bar_width = (800 - 20) / taille;
+    if (bar_width < 1) bar_width = 1;
+    int spacing = 1;
+    for (int i = 0; i < taille; i++) {
+        SDL_SetRenderDrawColor(renderer, i == highlight1 || i == highlight2 ? 0 : 255,
+        i == highlight1 || i == highlight2 ? 255 : 0, 0, 255);
+        float val = extract_value((char*)tab + i * size);
+        int bar_height = (val * 550) / max_val;
+        SDL_Rect rect = {10 + i * (bar_width + spacing), 600 - bar_height - 10, bar_width, bar_height};
+        SDL_RenderFillRect(renderer, &rect);
+    }
+}
+
 void afficher_tableau(int* tab, int taille, int highlight1, int highlight2) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
@@ -94,6 +133,8 @@ void afficher_stats(SortStats* stats, const char* sort_name, int live_update, Di
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }
+
+
 
 void fermer_SDL() {
     if (font) TTF_CloseFont(font);
