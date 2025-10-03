@@ -4,7 +4,7 @@
 extern SDL_Renderer* renderer; // Access renderer from visual.c
 
 // Implements Bubble Sort with step-by-step visualization
-void bubble_sort(int arr[], int n, SortStats* stats) {
+void bubble_sort(int arr[], int n, SortStats* stats, DistributionType dist) {
     int i, j, temp;
     int swapped;
     
@@ -19,7 +19,7 @@ void bubble_sort(int arr[], int n, SortStats* stats) {
             }
             afficher_tableau(arr, n, j, j + 1);
             stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-            afficher_stats(stats, "Bubble Sort", 1); // Add stats display with live update
+            afficher_stats(stats, "Bubble Sort", 1, dist); // Add stats display with live update
             SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             
@@ -34,7 +34,7 @@ void bubble_sort(int arr[], int n, SortStats* stats) {
                 
                 afficher_tableau(arr, n, j, j + 1);
                 stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-                afficher_stats(stats, "Bubble Sort", 1); // Add stats display with live update
+                afficher_stats(stats, "Bubble Sort", 1, dist); // Add stats display with live update
                 SDL_RenderPresent(renderer); // Update display
                 SDL_Delay(100);
                 process_events_during_sorting();
@@ -48,11 +48,11 @@ void bubble_sort(int arr[], int n, SortStats* stats) {
     }
     stop_timer(stats);  // Stop timing
     afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Bubble Sort", 0); // Final stats display
+    afficher_stats(stats, "Bubble Sort", 0, dist); // Final stats display
     SDL_RenderPresent(renderer); // Update display
 }
 
-void selection_sort(int arr[], int n, SortStats* stats) {
+void selection_sort(int arr[], int n, SortStats* stats, DistributionType dist) {
     int i, j, min_index, temp;
     
     start_timer(stats);
@@ -66,7 +66,7 @@ void selection_sort(int arr[], int n, SortStats* stats) {
             }
             afficher_tableau(arr, n, min_index, j);
             stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-            afficher_stats(stats, "Selection Sort", 1); // Add stats display with live update
+            afficher_stats(stats, "Selection Sort", 1, dist); // Add stats display with live update
             SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             
@@ -84,7 +84,7 @@ void selection_sort(int arr[], int n, SortStats* stats) {
             
             afficher_tableau(arr, n, i, min_index);
             stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-            afficher_stats(stats, "Selection Sort", 1); // Add stats display with live update
+            afficher_stats(stats, "Selection Sort", 1, dist); // Add stats display with live update
             SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             process_events_during_sorting();
@@ -96,11 +96,11 @@ void selection_sort(int arr[], int n, SortStats* stats) {
     }
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Selection Sort", 0); // Final stats display
+    afficher_stats(stats, "Selection Sort", 0, dist); // Final stats display
     SDL_RenderPresent(renderer); // Update display
 }
 
-void insertion_sort(int arr[], int n, SortStats* stats) {
+void insertion_sort(int arr[], int n, SortStats* stats, DistributionType dist) {
     int i, j, key;
     
     start_timer(stats);
@@ -119,7 +119,7 @@ void insertion_sort(int arr[], int n, SortStats* stats) {
             increment_memory_accesses(stats, 1);  // Read arr[j]
             afficher_tableau(arr, n, j, i);
             stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-            afficher_stats(stats, "Insertion Sort", 1); // Add stats display with live update
+            afficher_stats(stats, "Insertion Sort", 1, dist); // Add stats display with live update
             SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             
@@ -132,26 +132,21 @@ void insertion_sort(int arr[], int n, SortStats* stats) {
         increment_memory_accesses(stats, 1);  // Write arr[j+1]
         afficher_tableau(arr, n, j + 1, -1);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-        afficher_stats(stats, "Insertion Sort", 1); // Add stats display with live update
-        SDL_RenderPresent(renderer); // Update display
-        SDL_Delay(100);
-        process_events_during_sorting();
-        if (should_stop_sorting) {
-            stop_timer(stats);
-            return;
-        }
+        afficher_stats(stats, "Insertion Sort", 1, dist); // Add stats display with live update
+        SDL_RenderPresent(renderer); // Update display (fixed from truncated code)
     }
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Insertion Sort", 0); // Final stats display
+    afficher_stats(stats, "Insertion Sort", 0, dist); // Final stats display
     SDL_RenderPresent(renderer); // Update display
 }
 
-int partition(int arr[], int low, int high, int n, SortStats* stats) {
+int partition(int arr[], int low, int high, int n, SortStats* stats, DistributionType dist) {
     int pivot = arr[high];
-    increment_memory_accesses(stats, 1);  // Read arr[high]
     int i = low - 1;
     int j, temp;
+    
+    increment_memory_accesses(stats, 1);  // Read arr[high]
     
     for (j = low; j < high; j++) {
         process_events_during_sorting();
@@ -159,9 +154,9 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
             stop_timer(stats);
             return -1;
         }
-        afficher_tableau(arr, n, j, high);
+        afficher_tableau(arr, n, i + 1, j);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-        afficher_stats(stats, "Quick Sort", 1); // Add stats display with live update
+        afficher_stats(stats, "Quick Sort", 1, dist); // Add stats display with live update
         SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         
@@ -176,7 +171,7 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
             
             afficher_tableau(arr, n, i, j);
             stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-            afficher_stats(stats, "Quick Sort", 1); // Add stats display with live update
+            afficher_stats(stats, "Quick Sort", 1, dist); // Add stats display with live update
             SDL_RenderPresent(renderer); // Update display
             SDL_Delay(100);
             process_events_during_sorting();
@@ -194,7 +189,7 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
     
     afficher_tableau(arr, n, i + 1, high);
     stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-    afficher_stats(stats, "Quick Sort", 1); // Add stats display with live update
+    afficher_stats(stats, "Quick Sort", 1, dist); // Add stats display with live update
     SDL_RenderPresent(renderer); // Update display
     SDL_Delay(100);
     process_events_during_sorting();
@@ -206,25 +201,25 @@ int partition(int arr[], int low, int high, int n, SortStats* stats) {
     return i + 1;
 }
 
-void quicksort(int arr[], int low, int high, int n, SortStats* stats) {
+void quicksort(int arr[], int low, int high, int n, SortStats* stats, DistributionType dist) {
     if (low < high) {
-        int pi = partition(arr, low, high, n, stats);
+        int pi = partition(arr, low, high, n, stats, dist);
         if (pi == -1) return;
-        quicksort(arr, low, pi - 1, n, stats);
-        quicksort(arr, pi + 1, high, n, stats);
+        quicksort(arr, low, pi - 1, n, stats, dist);
+        quicksort(arr, pi + 1, high, n, stats, dist);
     }
 }
 
-void quick_sort(int arr[], int n, SortStats* stats) {
+void quick_sort(int arr[], int n, SortStats* stats, DistributionType dist) {
     start_timer(stats);
-    quicksort(arr, 0, n - 1, n, stats);
+    quicksort(arr, 0, n - 1, n, stats, dist);
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Quick Sort", 0); // Final stats display
+    afficher_stats(stats, "Quick Sort", 0, dist); // Final stats display
     SDL_RenderPresent(renderer); // Update display
 }
 
-void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
+void merge(int arr[], int low, int mid, int high, int n, SortStats* stats, DistributionType dist) {
     int n1 = mid - low + 1;
     int n2 = high - mid;
     int L[n1], R[n2];
@@ -249,7 +244,7 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         }
         afficher_tableau(arr, n, low + i, mid + 1 + j);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-        afficher_stats(stats, "Merge Sort", 1); // Add stats display with live update
+        afficher_stats(stats, "Merge Sort", 1, dist); // Add stats display with live update
         SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         
@@ -268,7 +263,7 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         
         afficher_tableau(arr, n, k - 1, -1);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-        afficher_stats(stats, "Merge Sort", 1); // Add stats display with live update
+        afficher_stats(stats, "Merge Sort", 1, dist); // Add stats display with live update
         SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
@@ -284,7 +279,7 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         i++; k++;
         afficher_tableau(arr, n, k - 1, -1);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-        afficher_stats(stats, "Merge Sort", 1); // Add stats display with live update
+        afficher_stats(stats, "Merge Sort", 1, dist); // Add stats display with live update
         SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
@@ -300,7 +295,7 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
         j++; k++;
         afficher_tableau(arr, n, k - 1, -1);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
-        afficher_stats(stats, "Merge Sort", 1); // Add stats display with live update
+        afficher_stats(stats, "Merge Sort", 1, dist); // Add stats display with live update
         SDL_RenderPresent(renderer); // Update display
         SDL_Delay(100);
         process_events_during_sorting();
@@ -311,18 +306,18 @@ void merge(int arr[], int low, int mid, int high, int n, SortStats* stats) {
     }
 }
 
-void mergesort(int arr[], int low, int high, int n, SortStats* stats) {
+void mergesort(int arr[], int low, int high, int n, SortStats* stats, DistributionType dist) {
     if (low < high) {
         int mid = low + (high - low) / 2;
         
-        mergesort(arr, low, mid, n, stats);
+        mergesort(arr, low, mid, n, stats, dist);
         if (should_stop_sorting) return;
-        mergesort(arr, mid + 1, high, n, stats);
+        mergesort(arr, mid + 1, high, n, stats, dist);
         if (should_stop_sorting) return;
-        merge(arr, low, mid, high, n, stats);
+        merge(arr, low, mid, high, n, stats, dist);
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
         afficher_tableau(arr, n, low, mid + 1);  // Ajuste les highlights si besoin
-        afficher_stats(stats, "Merge Sort", 1);  // Affichage en temps réel
+        afficher_stats(stats, "Merge Sort", 1, dist);  // Affichage en temps réel
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -330,11 +325,11 @@ void mergesort(int arr[], int low, int high, int n, SortStats* stats) {
     }
 }
 
-void merge_sort(int arr[], int n, SortStats* stats) {
+void merge_sort(int arr[], int n, SortStats* stats, DistributionType dist) {
     start_timer(stats);
-    mergesort(arr, 0, n - 1, n, stats);
+    mergesort(arr, 0, n - 1, n, stats, dist);
     stop_timer(stats);
     afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Merge Sort", 0); // Final stats display
+    afficher_stats(stats, "Merge Sort", 0, dist); // Final stats display
     SDL_RenderPresent(renderer); // Update display
 }

@@ -56,10 +56,19 @@ void afficher_tableau(int* tab, int taille, int highlight1, int highlight2) {
     // Note: SDL_RenderPresent called by caller
 }
 
-void afficher_stats(SortStats* stats, const char* sort_name, int live_update) {
+void afficher_stats(SortStats* stats, const char* sort_name, int live_update, DistributionType dist) {
     SDL_Color white = {255, 255, 255, 255};
     char text[256];
     float time;
+    const char* dist_name = "";
+    switch (dist) {
+        case DIST_RANDOM: dist_name = "Random"; break;
+        case DIST_SORTED: dist_name = "Sorted"; break;
+        case DIST_REVERSE: dist_name = "Reverse"; break;
+        case DIST_NEARLY_SORTED: dist_name = "Nearly Sorted"; break;
+        case DIST_DUPLICATES: dist_name = "Duplicates"; break;
+        case DIST_PYRAMID: dist_name = "Pyramid"; break;
+    }
     if (live_update) {
         stats->end_time = SDL_GetTicks();  // Mise à jour en temps réel
         time = (stats->end_time - stats->start_time) / 1000.0f;
@@ -67,8 +76,8 @@ void afficher_stats(SortStats* stats, const char* sort_name, int live_update) {
         time = get_execution_time(stats);  // Temps final
     }
     snprintf(text, sizeof(text),
-             "%s: %d comparisons, %d accesses, %.3f s",
-             sort_name, stats->comparisons, stats->memory_accesses, time); // Corrigé avec ->
+             "%s: %d comparisons, %d accesses, %.3f s - Dist: %s",
+             sort_name, stats->comparisons, stats->memory_accesses, time, dist_name);
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, white);
     if (!surface) {
         printf("Text rendering failed: %s\n", TTF_GetError());
