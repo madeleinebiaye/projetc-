@@ -52,7 +52,7 @@ float extract_student_age(const void* ptr) {
     return (float)((Student*)ptr)->age;
 }
 
-void afficher_tableau_generic(void* tab, int taille, size_t size, int highlight1, int highlight2, DistributionType dist, float (*extract_value)(const void*)) {
+void display_array_generic(void* tab, int taille, size_t size, int highlight1, int highlight2, DistributionType dist, float (*extract_value)(const void*)) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     
@@ -75,7 +75,7 @@ void afficher_tableau_generic(void* tab, int taille, size_t size, int highlight1
     }
 }
 
-void afficher_tableau(int* tab, int taille, int highlight1, int highlight2) {
+void display_array(int* tab, int taille, int highlight1, int highlight2) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     int max_val = 1;
@@ -95,7 +95,7 @@ void afficher_tableau(int* tab, int taille, int highlight1, int highlight2) {
     // Note: SDL_RenderPresent called by caller
 }
 
-void afficher_stats(SortStats* stats, const char* sort_name, int live_update, DistributionType dist) {
+void display_stats(SortStats* stats, const char* sort_name, int live_update, DistributionType dist) {
     SDL_Color white = {255, 255, 255, 255};
     char text[256];
     float time;
@@ -136,7 +136,7 @@ void afficher_stats(SortStats* stats, const char* sort_name, int live_update, Di
 
 
 
-void fermer_SDL() {
+void close_SDL() {
     if (font) TTF_CloseFont(font);
     if (renderer) SDL_DestroyRenderer(renderer);
     if (window) SDL_DestroyWindow(window);

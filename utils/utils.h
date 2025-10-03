@@ -24,7 +24,7 @@ int compare_student_grade(const void* a, const void* b);
 int compare_student_name(const void* a, const void* b);
 
 void generate_array(int arr[], int size, DistributionType dist);
-void generate_array_float(float arr[], int size, DistributionType dist); // Pour float
-void generate_array_student(Student arr[], int size, DistributionType dist); // Pour Student
+void generate_array_float(float arr[], int size, DistributionType dist);
+void generate_array_student(Student arr[], int size, DistributionType dist); 
 
 #endif // UTILS_H

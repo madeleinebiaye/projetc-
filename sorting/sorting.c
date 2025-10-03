@@ -4,9 +4,8 @@
 
 extern SDL_Renderer* renderer; // Access renderer from visual.c
 
-// Fonctions pour int (versions originales renommées avec _int)
 
-// Bubble Sort pour int
+// Bubble Sort for int
 void bubble_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) {
     int i, j, temp;
     int swapped;
@@ -20,9 +19,9 @@ void bubble_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) 
                 stop_timer(stats);
                 return;
             }
-            afficher_tableau(arr, n, j, j + 1);
+            display_array(arr, n, j, j + 1);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Bubble Sort", 1, dist);
+            display_stats(stats, "Bubble Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             
@@ -35,9 +34,9 @@ void bubble_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) 
                 swapped = 1;
                 increment_memory_accesses(stats, 3);
                 
-                afficher_tableau(arr, n, j, j + 1);
+                display_array(arr, n, j, j + 1);
                 stats->end_time = SDL_GetTicks();
-                afficher_stats(stats, "Bubble Sort", 1, dist);
+                display_stats(stats, "Bubble Sort", 1, dist);
                 SDL_RenderPresent(renderer);
                 SDL_Delay(100);
                 process_events_during_sorting();
@@ -50,12 +49,12 @@ void bubble_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) 
         if (swapped == 0) break;
     }
     stop_timer(stats);
-    afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Bubble Sort", 0, dist);
+    display_array(arr, n, -1, -1);
+    display_stats(stats, "Bubble Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
 
-// Selection Sort pour int
+// Selection Sort for int
 void selection_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) {
     int i, j, min_index, temp;
     
@@ -68,9 +67,9 @@ void selection_sort_int(int arr[], int n, SortStats* stats, DistributionType dis
                 stop_timer(stats);
                 return;
             }
-            afficher_tableau(arr, n, min_index, j);
+            display_array(arr, n, min_index, j);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Selection Sort", 1, dist);
+            display_stats(stats, "Selection Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             
@@ -86,9 +85,9 @@ void selection_sort_int(int arr[], int n, SortStats* stats, DistributionType dis
             arr[min_index] = temp;
             increment_memory_accesses(stats, 3);
             
-            afficher_tableau(arr, n, i, min_index);
+            display_array(arr, n, i, min_index);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Selection Sort", 1, dist);
+            display_stats(stats, "Selection Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             process_events_during_sorting();
@@ -99,12 +98,12 @@ void selection_sort_int(int arr[], int n, SortStats* stats, DistributionType dis
         }
     }
     stop_timer(stats);
-    afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Selection Sort", 0, dist);
+    display_array(arr, n, -1, -1);
+    display_stats(stats, "Selection Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
 
-// Insertion Sort pour int
+// Insertion Sort fo int
 void insertion_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) {
     int i, j, key;
     
@@ -122,9 +121,9 @@ void insertion_sort_int(int arr[], int n, SortStats* stats, DistributionType dis
             }
             increment_comparisons(stats);
             increment_memory_accesses(stats, 1);
-            afficher_tableau(arr, n, j, i);
+            display_array(arr, n, j, i);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Insertion Sort", 1, dist);
+            display_stats(stats, "Insertion Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             
@@ -135,18 +134,18 @@ void insertion_sort_int(int arr[], int n, SortStats* stats, DistributionType dis
         
         arr[j + 1] = key;
         increment_memory_accesses(stats, 1);
-        afficher_tableau(arr, n, j + 1, -1);
+        display_array(arr, n, j + 1, -1);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Insertion Sort", 1, dist);
+        display_stats(stats, "Insertion Sort", 1, dist);
         SDL_RenderPresent(renderer);
     }
     stop_timer(stats);
-    afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Insertion Sort", 0, dist);
+    display_array(arr, n, -1, -1);
+    display_stats(stats, "Insertion Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
 
-// Partition pour int
+// Partition for int
 int partition_int(int arr[], int low, int high, int n, SortStats* stats, DistributionType dist) {
     int pivot = arr[high];
     int i = low - 1;
@@ -160,9 +159,9 @@ int partition_int(int arr[], int low, int high, int n, SortStats* stats, Distrib
             stop_timer(stats);
             return -1;
         }
-        afficher_tableau(arr, n, i + 1, j);
+        display_array(arr, n, i + 1, j);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Quick Sort", 1, dist);
+        display_stats(stats, "Quick Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         
@@ -175,9 +174,9 @@ int partition_int(int arr[], int low, int high, int n, SortStats* stats, Distrib
             arr[j] = temp;
             increment_memory_accesses(stats, 3);
             
-            afficher_tableau(arr, n, i, j);
+            display_array(arr, n, i, j);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Quick Sort", 1, dist);
+            display_stats(stats, "Quick Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             process_events_during_sorting();
@@ -193,9 +192,9 @@ int partition_int(int arr[], int low, int high, int n, SortStats* stats, Distrib
     arr[high] = temp;
     increment_memory_accesses(stats, 3);
     
-    afficher_tableau(arr, n, i + 1, high);
+    display_array(arr, n, i + 1, high);
     stats->end_time = SDL_GetTicks();
-    afficher_stats(stats, "Quick Sort", 1, dist);
+    display_stats(stats, "Quick Sort", 1, dist);
     SDL_RenderPresent(renderer);
     SDL_Delay(100);
     process_events_during_sorting();
@@ -207,7 +206,7 @@ int partition_int(int arr[], int low, int high, int n, SortStats* stats, Distrib
     return i + 1;
 }
 
-// Quicksort pour int
+
 void quicksort_int(int arr[], int low, int high, int n, SortStats* stats, DistributionType dist) {
     if (low < high) {
         int pi = partition_int(arr, low, high, n, stats, dist);
@@ -217,17 +216,16 @@ void quicksort_int(int arr[], int low, int high, int n, SortStats* stats, Distri
     }
 }
 
-// Quick Sort pour int
 void quick_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) {
     start_timer(stats);
     quicksort_int(arr, 0, n - 1, n, stats, dist);
     stop_timer(stats);
-    afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Quick Sort", 0, dist);
+    display_array(arr, n, -1, -1);
+    display_stats(stats, "Quick Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
 
-// Merge pour int
+
 void merge_int(int arr[], int low, int mid, int high, int n, SortStats* stats, DistributionType dist) {
     int n1 = mid - low + 1;
     int n2 = high - mid;
@@ -251,9 +249,9 @@ void merge_int(int arr[], int low, int mid, int high, int n, SortStats* stats, D
             stop_timer(stats);
             return;
         }
-        afficher_tableau(arr, n, low + i, mid + 1 + j);
+        display_array(arr, n, low + i, mid + 1 + j);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         
@@ -270,9 +268,9 @@ void merge_int(int arr[], int low, int mid, int high, int n, SortStats* stats, D
         }
         k++;
         
-        afficher_tableau(arr, n, k - 1, -1);
+        display_array(arr, n, k - 1, -1);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -286,9 +284,9 @@ void merge_int(int arr[], int low, int mid, int high, int n, SortStats* stats, D
         arr[k] = L[i];
         increment_memory_accesses(stats, 2);
         i++; k++;
-        afficher_tableau(arr, n, k - 1, -1);
+        display_array(arr, n, k - 1, -1);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -302,9 +300,9 @@ void merge_int(int arr[], int low, int mid, int high, int n, SortStats* stats, D
         arr[k] = R[j];
         increment_memory_accesses(stats, 2);
         j++; k++;
-        afficher_tableau(arr, n, k - 1, -1);
+        display_array(arr, n, k - 1, -1);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -315,7 +313,7 @@ void merge_int(int arr[], int low, int mid, int high, int n, SortStats* stats, D
     }
 }
 
-// Mergesort pour int
+
 void mergesort_int(int arr[], int low, int high, int n, SortStats* stats, DistributionType dist) {
     if (low < high) {
         int mid = low + (high - low) / 2;
@@ -326,8 +324,8 @@ void mergesort_int(int arr[], int low, int high, int n, SortStats* stats, Distri
         if (should_stop_sorting) return;
         merge_int(arr, low, mid, high, n, stats, dist);
         stats->end_time = SDL_GetTicks();
-        afficher_tableau(arr, n, low, mid + 1);
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_array(arr, n, low, mid + 1);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -335,19 +333,17 @@ void mergesort_int(int arr[], int low, int high, int n, SortStats* stats, Distri
     }
 }
 
-// Merge Sort pour int
+
 void merge_sort_int(int arr[], int n, SortStats* stats, DistributionType dist) {
     start_timer(stats);
     mergesort_int(arr, 0, n - 1, n, stats, dist);
     stop_timer(stats);
-    afficher_tableau(arr, n, -1, -1);
-    afficher_stats(stats, "Merge Sort", 0, dist);
+    display_array(arr, n, -1, -1);
+    display_stats(stats, "Merge Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
 
-// Versions génériques pour tout type
 
-// Bubble Sort générique
 void bubble_sort(void* arr, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     char* array = (char*)arr;
     char* temp = malloc(size);
@@ -363,9 +359,9 @@ void bubble_sort(void* arr, int n, size_t size, SortStats* stats, DistributionTy
                 free(temp);
                 return;
             }
-            afficher_tableau_generic(arr, n, size, j, j + 1, dist, extract);
+            display_array_generic(arr, n, size, j, j + 1, dist, extract);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Bubble Sort", 1, dist);
+            display_stats(stats, "Bubble Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             
@@ -378,9 +374,9 @@ void bubble_sort(void* arr, int n, size_t size, SortStats* stats, DistributionTy
                 swapped = 1;
                 increment_memory_accesses(stats, 3);
                 
-                afficher_tableau_generic(arr, n, size, j, j + 1, dist, extract);
+                display_array_generic(arr, n, size, j, j + 1, dist, extract);
                 stats->end_time = SDL_GetTicks();
-                afficher_stats(stats, "Bubble Sort", 1, dist);
+                display_stats(stats, "Bubble Sort", 1, dist);
                 SDL_RenderPresent(renderer);
                 SDL_Delay(100);
                 process_events_during_sorting();
@@ -394,13 +390,13 @@ void bubble_sort(void* arr, int n, size_t size, SortStats* stats, DistributionTy
         if (swapped == 0) break;
     }
     stop_timer(stats);
-    afficher_tableau_generic(arr, n, size, -1, -1, dist, extract);
-    afficher_stats(stats, "Bubble Sort", 0, dist);
+    display_array_generic(arr, n, size, -1, -1, dist, extract);
+    display_stats(stats, "Bubble Sort", 0, dist);
     SDL_RenderPresent(renderer);
     free(temp);
 }
 
-// Selection Sort générique
+// Selection Sort for generic type
 void selection_sort(void* arr, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     char* array = (char*)arr;
     char* temp = malloc(size);
@@ -415,9 +411,9 @@ void selection_sort(void* arr, int n, size_t size, SortStats* stats, Distributio
                 free(temp);
                 return;
             }
-            afficher_tableau_generic(arr, n, size, min_index, j, dist, extract);
+            display_array_generic(arr, n, size, min_index, j, dist, extract);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Selection Sort", 1, dist);
+            display_stats(stats, "Selection Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             
@@ -433,9 +429,9 @@ void selection_sort(void* arr, int n, size_t size, SortStats* stats, Distributio
             memcpy(array + min_index * size, temp, size);
             increment_memory_accesses(stats, 3);
             
-            afficher_tableau_generic(arr, n, size, i, min_index, dist, extract);
+            display_array_generic(arr, n, size, i, min_index, dist, extract);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Selection Sort", 1, dist);
+            display_stats(stats, "Selection Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             process_events_during_sorting();
@@ -447,13 +443,12 @@ void selection_sort(void* arr, int n, size_t size, SortStats* stats, Distributio
         }
     }
     stop_timer(stats);
-    afficher_tableau_generic(arr, n, size, -1, -1, dist, extract);
-    afficher_stats(stats, "Selection Sort", 0, dist);
+    display_array_generic(arr, n, size, -1, -1, dist, extract);
+    display_stats(stats, "Selection Sort", 0, dist);
     SDL_RenderPresent(renderer);
     free(temp);
 }
-
-// Insertion Sort générique
+// Insertion Sort for generic type
 void insertion_sort(void* arr, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     char* array = (char*)arr;
     char* key = malloc(size);
@@ -473,9 +468,9 @@ void insertion_sort(void* arr, int n, size_t size, SortStats* stats, Distributio
             }
             increment_comparisons(stats);
             increment_memory_accesses(stats, 1);
-            afficher_tableau_generic(arr, n, size, j, i, dist, extract);
+            display_array_generic(arr, n, size, j, i, dist, extract);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Insertion Sort", 1, dist);
+            display_stats(stats, "Insertion Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             
@@ -486,19 +481,19 @@ void insertion_sort(void* arr, int n, size_t size, SortStats* stats, Distributio
         
         memcpy(array + (j + 1) * size, key, size);
         increment_memory_accesses(stats, 1);
-        afficher_tableau_generic(arr, n, size, j + 1, -1, dist, extract);
+        display_array_generic(arr, n, size, j + 1, -1, dist, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Insertion Sort", 1, dist);
+        display_stats(stats, "Insertion Sort", 1, dist);
         SDL_RenderPresent(renderer);
     }
     stop_timer(stats);
-    afficher_tableau_generic(arr, n, size, -1, -1, dist, extract);
-    afficher_stats(stats, "Insertion Sort", 0, dist);
+    display_array_generic(arr, n, size, -1, -1, dist, extract);
+    display_stats(stats, "Insertion Sort", 0, dist);
     SDL_RenderPresent(renderer);
     free(key);
 }
 
-// Partition générique
+// Partition for generic type
 int partition(void* arr, int low, int high, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     char* array = (char*)arr;
     char* pivot = malloc(size);
@@ -516,9 +511,9 @@ int partition(void* arr, int low, int high, int n, size_t size, SortStats* stats
             free(temp);
             return -1;
         }
-        afficher_tableau_generic(arr, n, size, i + 1, j, dist, extract);
+        display_array_generic(arr, n, size, i + 1, j, dist, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Quick Sort", 1, dist);
+        display_stats(stats, "Quick Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         
@@ -531,9 +526,9 @@ int partition(void* arr, int low, int high, int n, size_t size, SortStats* stats
             memcpy(array + j * size, temp, size);
             increment_memory_accesses(stats, 3);
             
-            afficher_tableau_generic(arr, n, size, i, j, dist, extract);
+            display_array_generic(arr, n, size, i, j, dist, extract);
             stats->end_time = SDL_GetTicks();
-            afficher_stats(stats, "Quick Sort", 1, dist);
+            display_stats(stats, "Quick Sort", 1, dist);
             SDL_RenderPresent(renderer);
             SDL_Delay(100);
             process_events_during_sorting();
@@ -551,9 +546,9 @@ int partition(void* arr, int low, int high, int n, size_t size, SortStats* stats
     memcpy(array + high * size, temp, size);
     increment_memory_accesses(stats, 3);
     
-    afficher_tableau_generic(arr, n, size, i + 1, high, dist, extract);
+    display_array_generic(arr, n, size, i + 1, high, dist, extract);
     stats->end_time = SDL_GetTicks();
-    afficher_stats(stats, "Quick Sort", 1, dist);
+    display_stats(stats, "Quick Sort", 1, dist);
     SDL_RenderPresent(renderer);
     SDL_Delay(100);
     process_events_during_sorting();
@@ -569,7 +564,7 @@ int partition(void* arr, int low, int high, int n, size_t size, SortStats* stats
     return i + 1;
 }
 
-// Quicksort générique
+// Quicksort for generic type
 void quicksort(void* arr, int low, int high, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     if (low < high) {
         int pi = partition(arr, low, high, n, size, stats, dist, cmp, extract);
@@ -579,17 +574,17 @@ void quicksort(void* arr, int low, int high, int n, size_t size, SortStats* stat
     }
 }
 
-// Quick Sort générique
+    // Quick Sort générique
 void quick_sort(void* arr, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     start_timer(stats);
     quicksort(arr, 0, n - 1, n, size, stats, dist, cmp, extract);
     stop_timer(stats);
-    afficher_tableau_generic(arr, n, size, -1, -1, dist, extract);
-    afficher_stats(stats, "Quick Sort", 0, dist);
+    display_array_generic(arr, n, size, -1, -1, dist, extract);
+    display_stats(stats, "Quick Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
 
-// Merge générique
+// Merge for generic type
 void merge(void* arr, int low, int mid, int high, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     int n1 = mid - low + 1;
     int n2 = high - mid;
@@ -616,9 +611,9 @@ void merge(void* arr, int low, int mid, int high, int n, size_t size, SortStats*
             free(R);
             return;
         }
-        afficher_tableau_generic(arr, n, size, low + i, mid + 1 + j, dist, extract);
+        display_array_generic(arr, n, size, low + i, mid + 1 + j, dist, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         
@@ -635,9 +630,9 @@ void merge(void* arr, int low, int mid, int high, int n, size_t size, SortStats*
         }
         k++;
         
-        afficher_tableau_generic(arr, n, size, k - 1, -1, dist, extract);
+        display_array_generic(arr, n, size, k - 1, -1, dist, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -653,9 +648,9 @@ void merge(void* arr, int low, int mid, int high, int n, size_t size, SortStats*
         memcpy((char*)arr + k * size, L + i * size, size);
         increment_memory_accesses(stats, 2);
         i++; k++;
-        afficher_tableau_generic(arr, n, size, k - 1, -1, dist, extract);
+        display_array_generic(arr, n, size, k - 1, -1, dist, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -671,9 +666,9 @@ void merge(void* arr, int low, int mid, int high, int n, size_t size, SortStats*
         memcpy((char*)arr + k * size, R + j * size, size);
         increment_memory_accesses(stats, 2);
         j++; k++;
-        afficher_tableau_generic(arr, n, size, k - 1, -1, dist, extract);
+        display_array_generic(arr, n, size, k - 1, -1, dist, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -689,7 +684,7 @@ void merge(void* arr, int low, int mid, int high, int n, size_t size, SortStats*
     free(R);
 }
 
-// Mergesort générique
+// Mergesort for generic type
 void mergesort(void* arr, int low, int high, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     if (low < high) {
         int mid = low + (high - low) / 2;
@@ -700,8 +695,8 @@ void mergesort(void* arr, int low, int high, int n, size_t size, SortStats* stat
         if (should_stop_sorting) return;
         merge(arr, low, mid, high, n, size, stats, dist, cmp, extract);
         stats->end_time = SDL_GetTicks();
-        afficher_tableau_generic(arr, n, size, low, mid + 1, dist, extract);
-        afficher_stats(stats, "Merge Sort", 1, dist);
+        display_array_generic(arr, n, size, low, mid + 1, dist, extract);
+        display_stats(stats, "Merge Sort", 1, dist);
         SDL_RenderPresent(renderer);
         SDL_Delay(100);
         process_events_during_sorting();
@@ -709,12 +704,12 @@ void mergesort(void* arr, int low, int high, int n, size_t size, SortStats* stat
     }
 }
 
-// Merge Sort générique
+    // Merge Sort générique
 void merge_sort(void* arr, int n, size_t size, SortStats* stats, DistributionType dist, compare_func cmp, extract_value_func extract) {
     start_timer(stats);
     mergesort(arr, 0, n - 1, n, size, stats, dist, cmp, extract);
     stop_timer(stats);
-    afficher_tableau_generic(arr, n, size, -1, -1, dist, extract);
-    afficher_stats(stats, "Merge Sort", 0, dist);
+    display_array_generic(arr, n, size, -1, -1, dist, extract);
+    display_stats(stats, "Merge Sort", 0, dist);
     SDL_RenderPresent(renderer);
 }
